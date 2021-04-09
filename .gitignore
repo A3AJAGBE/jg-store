@@ -3,3 +3,5 @@ venv
 .env
 *.cpython-39.pyc
 store/__pycache__/
+
+
