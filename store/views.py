@@ -83,3 +83,9 @@ def logout():
     logout_user()
     flash('You are logged out successfully', "success")
     return redirect(url_for('index'))
+
+
+@app.route('/profile/<name>')
+def profile(name):
+    user = Users.query.filter_by(first_name=name).first_or_404()
+    return render_template('profile.html', year=current_year, profile=user)
