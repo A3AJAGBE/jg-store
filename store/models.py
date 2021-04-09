@@ -2,6 +2,16 @@ from store import db
 from flask_login import UserMixin
 
 
+class Roles(db.Model):
+    """Roles table"""
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30), unique=True, nullable=False)
+    users = db.relationship('Users', backref='role', lazy=True)
+
+    def __repr__(self):
+        return self.name
+
+
 class Users(UserMixin, db.Model):
     """Users table"""
     id = db.Column(db.Integer, primary_key=True)
@@ -11,6 +21,7 @@ class Users(UserMixin, db.Model):
     email_confirmed_at = db.Column(db.DateTime())
     is_active = db.Column(db.Boolean(), nullable=False, default=1)
     password = db.Column(db.String(300), nullable=False)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False, default=1)
 
     def __repr__(self):
         return f'{self.first_name} {self.last_name}'
