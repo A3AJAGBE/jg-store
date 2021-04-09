@@ -1,0 +1,182 @@
+body {
+    font-size: 1.3rem;
+    font-family: 'Roboto', sans-serif;
+    background: #E6D9C0;
+}
+
+h1, h2 {
+    font-family: 'Abril Fatface', cursive;
+}
+
+
+/* Theme color customization */
+.theme-btn {
+    background: #C0A062;
+    color: #FBF9F6;
+    font-family: 'Abril Fatface', cursive;
+}
+
+.theme-btn:hover {
+    background: #A28857;
+}
+
+.theme-btn-outline {
+    border-color: #C0A062;
+    color: #FBF9F6;
+    font-family: 'Abril Fatface', cursive;
+}
+
+.theme-btn-outline:hover {
+    background: #C0A062;
+}
+
+.theme-btn-outline:focus, .theme-btn:focus {
+    box-shadow: none;
+}
+
+.theme-text-light {
+    color: #FBF9F6;
+}
+
+.theme-text {
+    color: #C0A062;
+}
+
+/* Navigation styling */
+#navbar {
+    position: absolute;
+     background: #A28857;
+}
+
+#navbar .navbar-nav .nav-link {
+    letter-spacing: 1px;
+    color: #FBF9F6;
+}
+
+#navbar .navbar-nav .nav-link:hover {
+    font-style: italic;
+}
+
+#navbar .navbar-toggler {
+    border-color: #C0A062;
+}
+
+#navbar .navbar-toggler:focus {
+    background: #C0A062;
+    box-shadow: none;
+}
+
+#navbar .dropdown-menu {
+    background: #E6D9C0;
+    font-size: 1.2rem;
+}
+
+#navbar .dropdown-menu .dropdown-item:hover {
+    background: #7d6432;
+    color: #FBF9F6;
+}
+
+.authenticated button {
+    font-family: 'Abril Fatface', cursive;
+    background: #7d6432;
+    color: #FBF9F6;
+}
+
+.authenticated button:focus {
+   box-shadow: none;
+}
+
+
+/* Header styling */
+header{
+  background: #C0A062;
+  position: relative;
+  background-size: cover;
+  background: no-repeat center center;
+}
+
+header .header-content {
+  padding: 200px 0 150px;
+}
+
+.image-overlay {
+     background: rgba(0, 0, 0, .5);
+}
+
+/* Form styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.centered-content {
+  display: flex;
+  align-items: center;
+  margin: 40px 0;
+  height: 100vh;
+}
+
+.help-block {
+    color: red;
+}
+
+.form_link {
+    color: #685329;
+    text-decoration: none;
+}
+
+.form_link:hover {
+    color: #91743A;
+    font-size: 1.4rem;
+}
+
+.contact-form textarea {
+  resize: none;
+  height: 100px;
+}
+
+/* Content styling */
+.home-products .card img, .products .card img{
+    padding: 60px 30px 30px;
+}
+
+.home-products .price-overlay {
+    bottom: auto;
+}
+
+.products {
+    margin-top: 100px;
+}
+
+.stock-overlay {
+     background: rgba(0, 0, 0, .2);
+}
+
+.stock-overlay h2 {
+  margin: 100% auto;
+}
+
+
+/* Tablet and desktop styling */
+@media only screen and (min-width: 992px) {
+    #navbar {
+        background: transparent;
+    }
+
+    .footer-text{
+        float: right;
+    }
+
+    .centered-content {
+      margin: 0;
+    }
+
+    .authenticated button {
+        background: #C0A062;
+    }
+}
+
+@media (min-width: 768px) {
+     header .header-content {
+        padding: 200px 0;
+     }
+}
