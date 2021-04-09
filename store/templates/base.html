@@ -69,10 +69,26 @@
                         <a class="nav-link" href="#">Contact</a>
                     </li>
                 </ul>
+               {% if current_user.is_authenticated%}
+
+                    <div class="dropdown authenticated d-grid d-md-block ">
+                      <button class="btn btn-lg dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{current_user.first_name}}
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                          <li><hr class="dropdown-divider"></li>
+                         <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+                      </ul>
+                    </div>
+                {% else %}
                 <div class="d-grid d-md-block gap-3">
                     <a class="btn theme-btn-outline btn-lg" href="{{ url_for('login') }}" role="button">Log in</a>
                     <a class="btn theme-btn btn-lg" href="{{ url_for('register') }}" role="button">Register</a>
                 </div>
+                {% endif %}
             </div>
         </div>
     </nav>
