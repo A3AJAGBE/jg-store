@@ -22,5 +22,4 @@ class LoginForm(FlaskForm):
                                           validators.Email(message="That is not a valid email address.")])
     password = PasswordField("Password", [validators.InputRequired(message="This field cannot be empty."),
                                           validators.Length(min=8, message="Password must be at least 8 characters.")])
-    remember_me = BooleanField('Remember Me')
     submit = SubmitField("Log in")

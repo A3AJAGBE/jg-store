@@ -1,5 +1,6 @@
 from store import db
 from flask_login import UserMixin
+from datetime import datetime
 
 
 class Roles(db.Model):
@@ -21,6 +22,7 @@ class Users(UserMixin, db.Model):
     email_confirmed_at = db.Column(db.DateTime())
     is_active = db.Column(db.Boolean(), nullable=False, default=1)
     password = db.Column(db.String(300), nullable=False)
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False, default=1)
 
     def __repr__(self):
