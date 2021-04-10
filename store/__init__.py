@@ -1,5 +1,4 @@
 from flask import Flask
-from store.config import DevelopmentConfig
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -8,8 +7,13 @@ from flask_mail import Mail
 import logging
 from logging.handlers import SMTPHandler
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 app = Flask(__name__)
-app.config.from_object(DevelopmentConfig)
+app.config.from_object(os.environ.get('APP_Environment'))
 
 Bootstrap(app)
 
