@@ -19,4 +19,4 @@ login_manager.login_view = "login"
 login_manager.login_message = "Log in to access this page."
 login_manager.login_message_category = "danger"
 
-from store import views, models
+from store import views, models, errors
