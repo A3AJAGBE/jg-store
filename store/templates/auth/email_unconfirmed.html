@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
 {% block title %}Unconfirmed Email{% endblock %}
 
 <!-- Navbar -->
@@ -21,7 +22,11 @@
   <p>To experience the full shopping experience, your email needs to be confirmed. Check your inbox,
   you should have gotten an email with a confirmation link.</p>
 
-  <p>Resend confirmation email? <a href="#"> Click here </a></p>
+  <p><a class="btn theme-btn btn-lg" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Request new confirmation email</a></p>
+
+<div class="collapse" id="collapseExample">
+  {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "lg theme-btn"}, extra_classes="p-5 border rounded-3 bg-light") }}
+</div>
 
   </div>
 </div>

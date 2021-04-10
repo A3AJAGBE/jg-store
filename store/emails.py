@@ -30,7 +30,14 @@ def send_email(subject, recipients, text_body, html_body):
 
 
 def email_confirmation(user_email, text_body, html_body):
-    send_email('[The Jewelry Gallery] Email Confirmation Request',
+    send_email('[The Jewelry Gallery] Email Confirmation',
+               recipients=[user_email],
+               text_body=text_body,
+               html_body=html_body)
+
+
+def email_confirmation_resend(user_email, text_body, html_body):
+    send_email('[The Jewelry Gallery] New Email Confirmation',
                recipients=[user_email],
                text_body=text_body,
                html_body=html_body)

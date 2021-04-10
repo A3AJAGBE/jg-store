@@ -1,11 +1,12 @@
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
+from itsdangerous import SignatureExpired
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from store import app, db, login_manager
 from store.forms import *
 from store.models import Users
-from store.emails import generate_token, confirm_token, email_confirmation
+from store.emails import generate_token, confirm_token, email_confirmation, email_confirmation_resend
 
 # Get the year
 current_year = datetime.now().year
@@ -63,30 +64,52 @@ def register():
 
 @app.route('/confirm/<token>', methods=['GET', 'POST'])
 def confirm_email(token):
-    email = confirm_token(token)
-    # flash('The confirmation link is Invalid or has expired', 'danger')
-
-    user = Users.query.filter_by(email=email).first_or_404()
-
-    if user.email_confirmed:
-        flash(f'{user.first_name}, you have confirmed that email. Kindly login.', 'info')
-        return redirect(url_for('login'))
+    try:
+        email = confirm_token(token)
+    except SignatureExpired:
+        flash('The confirmation link is Invalid or has expired', 'danger')
+        return redirect(url_for('email_unconfirmed'))
     else:
-        user.email_confirmed = True
-        user.email_confirmed_at = datetime.utcnow()
-        db.session.add(user)
-        db.session.commit()
 
-        login_user(user)
-        flash(f'Email confirmation successful {user.first_name}, you are now logged in.', 'success')
-        return redirect(url_for('index'))
+        user = Users.query.filter_by(email=email).first_or_404()
+
+        if user.email_confirmed:
+            flash(f'{user.first_name}, you have confirmed that email. Kindly login.', 'info')
+            return redirect(url_for('login'))
+        else:
+            user.email_confirmed = True
+            user.email_confirmed_at = datetime.utcnow()
+            db.session.add(user)
+            db.session.commit()
+
+            login_user(user)
+            flash(f'Email confirmation successful {user.first_name}, you are now logged in.', 'success')
+            return redirect(url_for('index'))
 
 
-@app.route('/unconfirmed')
+@app.route('/unconfirmed', methods=['GET', 'POST'])
 def email_unconfirmed():
     if current_user.is_authenticated and current_user.email_confirmed:
         return redirect(url_for('index'))
-    return render_template('auth/email_unconfirmed.html')
+    form = NewEmailConfirmationRequestForm()
+    if form.validate_on_submit():
+        email = request.form['email']
+
+        user = Users.query.filter_by(email=email).first()
+
+        if not user:
+            flash('That is not a registered email address.', 'danger')
+        elif user.email_confirmed:
+            flash('That email address has already been confirmed.', 'danger')
+        else:
+            token = generate_token(email)
+            user_email = email
+            confirm_email_url = url_for('confirm_email', token=token, _external=True)
+            text_body = render_template('emails/resend_confirmation.txt', confirm_email_url=confirm_email_url)
+            html_body = render_template('emails/resend_confirmation.html', confirm_email_url=confirm_email_url)
+            email_confirmation_resend(user_email, text_body, html_body)
+            flash(f'A new email confirmation has been sent {user.first_name}, check your inbox.', 'success')
+    return render_template('auth/email_unconfirmed.html', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
