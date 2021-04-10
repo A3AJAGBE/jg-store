@@ -41,3 +41,10 @@ def email_confirmation_resend(user_email, text_body, html_body):
                recipients=[user_email],
                text_body=text_body,
                html_body=html_body)
+
+
+def email_password_reset(user_email, text_body, html_body):
+    send_email('[The Jewelry Gallery] Reset Password',
+               recipients=[user_email],
+               text_body=text_body,
+               html_body=html_body)
