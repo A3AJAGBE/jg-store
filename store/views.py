@@ -6,7 +6,7 @@ from datetime import datetime
 from store import app, db, login_manager
 from store.forms import *
 from store.models import Users
-from store.emails import generate_token, confirm_token, email_confirmation, email_confirmation_resend
+from store.emails import *
 
 # Get the year
 current_year = datetime.now().year
@@ -52,14 +52,16 @@ def register():
             token = generate_token(email)
             user_email = email
             confirm_email_url = url_for('confirm_email', token=token, _external=True)
-            text_body = render_template('emails/email_confirmation.txt', confirm_email_url=confirm_email_url)
-            html_body = render_template('emails/email_confirmation.html', confirm_email_url=confirm_email_url)
+            text_body = render_template('emails/email_confirmation.txt', confirm_email_url=confirm_email_url,
+                                        first_name=first_name)
+            html_body = render_template('emails/email_confirmation.html', confirm_email_url=confirm_email_url,
+                                        first_name=first_name)
             email_confirmation(user_email, text_body, html_body)
 
-            flash(f'Registration successful {new_user.first_name}, check for email confirmation in your inbox',
+            flash(f'Registration successful {first_name}, check for email confirmation in your inbox',
                   "success")
             return redirect(url_for('index'))
-    return render_template('auth/register.html', year=current_year, form=form)
+    return render_template('auth/register.html', form=form)
 
 
 @app.route('/confirm/<token>', methods=['GET', 'POST'])
@@ -105,10 +107,12 @@ def email_unconfirmed():
             token = generate_token(email)
             user_email = email
             confirm_email_url = url_for('confirm_email', token=token, _external=True)
-            text_body = render_template('emails/resend_confirmation.txt', confirm_email_url=confirm_email_url)
-            html_body = render_template('emails/resend_confirmation.html', confirm_email_url=confirm_email_url)
+            text_body = render_template('emails/resend_confirmation.txt', confirm_email_url=confirm_email_url,
+                                        first_name=user.first_name)
+            html_body = render_template('emails/resend_confirmation.html', confirm_email_url=confirm_email_url,
+                                        first_name=user.first_name)
             email_confirmation_resend(user_email, text_body, html_body)
-            flash(f'A new email confirmation has been sent {user.first_name}, check your inbox.', 'success')
+            flash(f'A new email confirmation has been sent {user.first_name}.', 'success')
     return render_template('auth/email_unconfirmed.html', form=form)
 
 
@@ -137,7 +141,7 @@ def login():
             else:
                 flash('You are yet to confirm your email address.', "danger")
                 return redirect(url_for('email_unconfirmed'))
-    return render_template('auth/login.html', year=current_year, form=form)
+    return render_template('auth/login.html', form=form)
 
 
 @app.route('/logout')
@@ -160,4 +164,52 @@ def reset_password_request():
     if current_user.is_authenticated:
         flash("You are unable to view that page because you are currently logged in.", "info")
         return redirect(url_for('index'))
-    return render_template('auth/reset_password_request.html', year=current_year, form=form)
+    if form.validate_on_submit():
+        email = request.form['email']
+
+        user = Users.query.filter_by(email=email).first()
+
+        if not user:
+            flash('That is not a registered email address.', 'danger')
+        elif not user.email_confirmed:
+            flash('That email address is not confirmed.', 'danger')
+        else:
+            token = generate_token(email)
+            user_email = email
+            reset_password_url = url_for('reset_password', token=token, _external=True)
+            text_body = render_template('emails/password_reset.txt', reset_password_url=reset_password_url,
+                                        first_name=user.first_name)
+            html_body = render_template('emails/password_reset.html', reset_password_url=reset_password_url,
+                                        first_name=user.first_name)
+            email_password_reset(user_email, text_body, html_body)
+            flash(f'An email has been sent {user.first_name}, check it for further instructions.', 'success')
+    return render_template('auth/reset_password_request.html', form=form)
+
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    form = ResetPasswordForm()
+    try:
+        email = confirm_token(token)
+    except SignatureExpired:
+        flash('The password reset link is Invalid or has expired, request for another', 'danger')
+        return redirect(url_for('reset_password_request'))
+    else:
+        user = Users.query.filter_by(email=email).first()
+
+        if not user.email_confirmed:
+            flash(f'{user.first_name}, you have not confirmed that email. Kindly, confirm before proceeding.', 'info')
+            return redirect(url_for('email_unconfirmed'))
+
+        if form.validate_on_submit():
+            password = request.form['password']
+            encrypt_password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
+            user.password = encrypt_password
+            db.session.add(user)
+            db.session.commit()
+
+            login_user(user)
+            flash(f'Password reset successful {user.first_name}, you are now logged in.', 'success')
+            return redirect(url_for('index'))
+    return render_template('auth/password_reset.html', form=form)
+
