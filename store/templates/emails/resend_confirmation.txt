@@ -1,0 +1,11 @@
+Dear {{ first_name }},
+
+This is the new email confirmation you requested.
+Kindly click on the link below to confirm your email address and activate your account.
+
+{{ confirm_email_url }}
+
+Sincerely,
+
+The Jewelry Gallery
+
