@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Unconfirmed Email{% endblock %}
+
+<!-- Navbar -->
+{% block navbar %}
+{% endblock %}
+
+<!--Contents-->
+{% block content %}
+
+<div class="centered-content">
+     <div class="container">
+         <a href="{{ url_for('index') }}">
+               <img class="d-block mx-auto mb-4" src="{{url_for('static', filename='images/jg.png')}}" alt="" width="100" height="70">
+         </a>
+  <div class="col-lg-6 mx-auto">
+      {% include "_messages.html" %}
+
+      <h1>Dear User,</h1>
+
+  <p>To experience the full shopping experience, your email needs to be confirmed. Check your inbox,
+  you should have gotten an email with a confirmation link.</p>
+
+  <p>Resend confirmation email? <a href="#"> Click here </a></p>
+
+  </div>
+</div>
+    </div>
+
+{% endblock %}
+
+<!-- Footer -->
+{% block footer %}
+{% endblock %}
