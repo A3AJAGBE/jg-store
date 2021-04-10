@@ -19,10 +19,10 @@
 
       <h1>Dear User,</h1>
 
-  <p>To experience the full shopping experience, your email needs to be confirmed. Check your inbox,
-  you should have gotten an email with a confirmation link.</p>
+  <p>Your email needs to be confirmed to experience the complete shopping experience on this platform, which you haven't
+      done. Check your inbox or spam folder; you should have gotten an email with a confirmation link.</p>
 
-  <p><a class="btn theme-btn btn-lg" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Request new confirmation email</a></p>
+  <p>Didn't get the email? <a class="btn theme-btn btn-lg" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Request new confirmation email</a></p>
 
 <div class="collapse" id="collapseExample">
   {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "lg theme-btn"}, extra_classes="p-5 border rounded-3 bg-light") }}
