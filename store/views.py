@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from store import app, db, login_manager
-from store.forms import RegisterForm, LoginForm
+from store.forms import *
 from store.models import Users
 
 # Get the year
@@ -89,3 +89,12 @@ def logout():
 def profile(name):
     user = Users.query.filter_by(first_name=name).first_or_404()
     return render_template('profile.html', year=current_year, profile=user)
+
+
+@app.route('/reset_password_request', methods=['GET', 'POST'])
+def reset_password_request():
+    form = ResetPasswordRequestForm()
+    if current_user.is_authenticated:
+        flash("You are unable to view that page because you are currently logged in.", "info")
+        return redirect(url_for('index'))
+    return render_template('reset_password_request.html', year=current_year, form=form)
