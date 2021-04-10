@@ -23,3 +23,15 @@ class LoginForm(FlaskForm):
     password = PasswordField("Password", [validators.InputRequired(message="This field cannot be empty."),
                                           validators.Length(min=8, message="Password must be at least 8 characters.")])
     submit = SubmitField("Log in")
+
+
+class ResetPasswordRequestForm(FlaskForm):
+    email = StringField("Email Address", [validators.InputRequired(message="This field cannot be empty."),
+                                          validators.Email(message="That is not a valid email address.")])
+    submit = SubmitField("Submit Request")
+
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField("Password", [validators.InputRequired(message="This field cannot be empty."),
+                                          validators.Length(min=8, message="Password must be at least 8 characters.")])
+    submit = SubmitField("Reset Password")
