@@ -1,6 +1,9 @@
 venv
 .idea
 .env
-*.cpython-39.pyc
 store/__pycache__/
-
+__pycache__/
+migrations/__pycache__/
+migrations/versions/__pycache__/
+store/__pycache__/__init__.cpython-39.pyc
+store/__pycache__/views.cpython-39.pyc
