@@ -51,7 +51,7 @@ def register():
             login_user(new_user)
             flash(f"Registered successfully {first_name}, you're now logged in.", "success")
             return redirect(url_for('index'))
-    return render_template('register.html', year=current_year, form=form)
+    return render_template('auth/register.html', year=current_year, form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -75,7 +75,7 @@ def login():
             login_user(user)
             flash('You are logged in successfully', "success")
             return redirect(url_for('index'))
-    return render_template('login.html', year=current_year, form=form)
+    return render_template('auth/login.html', year=current_year, form=form)
 
 
 @app.route('/logout')
@@ -97,4 +97,4 @@ def reset_password_request():
     if current_user.is_authenticated:
         flash("You are unable to view that page because you are currently logged in.", "info")
         return redirect(url_for('index'))
-    return render_template('reset_password_request.html', year=current_year, form=form)
+    return render_template('auth/reset_password_request.html', year=current_year, form=form)

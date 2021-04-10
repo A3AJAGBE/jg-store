@@ -18,6 +18,7 @@ class Users(UserMixin, db.Model):
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    email_confirmed = db.Column(db.Boolean(), nullable=False, default=0)
     email_confirmed_at = db.Column(db.DateTime())
     is_active = db.Column(db.Boolean(), nullable=False, default=1)
     password = db.Column(db.String(300), nullable=False)
