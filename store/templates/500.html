@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Internal Error{% endblock %}
+
+<!-- Header -->
+{% block header %}
+
+  <header style="background-image: url('{{ url_for('static', filename='images/500.png')}}');">
+
+        <div class="image-overlay">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-md-10 mx-auto">
+                        <div class="header-content text-center theme-text-light">
+                            <h1 class="display-1">Internal Error</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+  </header>
+
+{% endblock %}
+
+<!--Contents-->
+{% block content %}
+
+    <div class="container my-5 ">
+        <div class="col-lg-6 mx-auto">
+            <div class="text-center">
+                <h3>Unexpected error occurred</h3>
+                <p>The administrator has been notified. Sorry for the inconvenience!</p>
+                <a class="btn theme-btn btn-lg" href="{{ url_for('index') }}" role="button"><i class="fas fa-arrow-left"></i> Back to home</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
