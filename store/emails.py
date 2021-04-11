@@ -1,6 +1,7 @@
 from flask_mail import Message
 from store import mail, app
 from itsdangerous import URLSafeTimedSerializer
+from threading import Thread
 
 
 def generate_token(email):
@@ -18,6 +19,11 @@ def confirm_token(token, expiration=1800):
     return email
 
 
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg)
+
+
 def send_email(subject, recipients, text_body, html_body):
     msg = Message(
         subject,
@@ -26,7 +32,7 @@ def send_email(subject, recipients, text_body, html_body):
         body=text_body,
         html=html_body,
     )
-    mail.send(msg)
+    Thread(target=send_async_email, args=(app, msg)).start()
 
 
 def email_confirmation(user_email, text_body, html_body):
@@ -45,6 +51,13 @@ def email_confirmation_resend(user_email, text_body, html_body):
 
 def email_password_reset(user_email, text_body, html_body):
     send_email('[The Jewelry Gallery] Reset Password',
+               recipients=[user_email],
+               text_body=text_body,
+               html_body=html_body)
+
+
+def email_password_change(user_email, text_body, html_body):
+    send_email('[The Jewelry Gallery] Password Change',
                recipients=[user_email],
                text_body=text_body,
                html_body=html_body)

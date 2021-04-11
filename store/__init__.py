@@ -39,10 +39,13 @@ if not app.debug:
             secure = ()
         mail_handler = SMTPHandler(
             mailhost=(app.config['MAIL_SERVER'], app.config['MAIL_PORT']),
-            fromaddr='no-reply@' + app.config['MAIL_SERVER'],
+            fromaddr=app.config['MAIL_DEFAULT_SENDER'],
             toaddrs=app.config['ADMINS'], subject='Jewelry Gallery E-Store Failure',
             credentials=auth, secure=secure)
         mail_handler.setLevel(logging.ERROR)
+        mail_handler.setFormatter(logging.Formatter(
+            '[%(asctime)s] %(levelname)s in %(module)s: %(message)s'
+        ))
         app.logger.addHandler(mail_handler)
 
 from store import views, models, errors

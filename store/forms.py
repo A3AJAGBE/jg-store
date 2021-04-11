@@ -42,3 +42,13 @@ class ResetPasswordForm(FlaskForm):
                                               validators.Length(min=8,
                                                                 message="Password must be at least 8 characters.")])
     submit = SubmitField("Reset Password")
+
+
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField("Old Password", [validators.InputRequired(message="This field cannot be empty."),
+                                                  validators.Length(min=8,
+                                                                    message="Password must be at least 8 characters.")])
+    new_password = PasswordField("New Password", [validators.InputRequired(message="This field cannot be empty."),
+                                                  validators.Length(min=8,
+                                                                    message="Password must be at least 8 characters.")])
+    submit = SubmitField("Change Password")
