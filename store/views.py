@@ -22,6 +22,19 @@ def index():
     return render_template('index.html', year=current_year)
 
 
+@app.route('/about')
+def about():
+    return render_template('about.html', year=current_year)
+
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    form = ContactForm()
+    if form.validate_on_submit():
+        pass
+    return render_template('contact.html', year=current_year, form=form)
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
