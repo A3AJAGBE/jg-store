@@ -27,3 +27,10 @@ class Users(UserMixin, db.Model):
     def __repr__(self):
         return f'{self.first_name} {self.last_name}'
 
+
+class Contact(db.Model):
+    """contact table"""
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    message = db.Column(db.Text, nullable=False)
