@@ -1,0 +1,7 @@
+Dear {{ first_name }},
+
+{% block message %}
+{% endblock %}
+
+Sincerely,
+The Jewelry Gallery

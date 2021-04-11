@@ -1,4 +1,6 @@
-<h2>Dear {{ first_name }},</h2>
+{% extends 'emails/base_message.html' %}
+
+{% block message %}
 
 <p>This is the new email confirmation you requested </p>
 <p>Kindly click on the link below to confirm your email address and activate your account.</p>
@@ -10,5 +12,8 @@
   </a>
 </h4>
 
-<p>Sincerely,</p>
-<p>The Jewelry Gallery</p>
+<p>Alternatively, you can paste the following link in your browser's address bar:</p>
+<p>{{ confirm_email_url }}</p>
+<p>If you did not complete the request, ignore this email.</p>
+
+{% endblock %}
