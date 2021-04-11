@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from store import app, db, login_manager
 from store.forms import *
-from store.models import Users
+from store.models import Users, Contact
 from store.emails import *
 
 # Get the year
@@ -31,7 +31,19 @@ def about():
 def contact():
     form = ContactForm()
     if form.validate_on_submit():
-        pass
+        name = request.form['name'].title()
+        email = request.form['email']
+        message = request.form['message']
+
+        user_message = Contact(
+            name=name,
+            email=email,
+            message=message,
+        )
+        db.session.add(user_message)
+        db.session.commit()
+        flash(f'Message sent successfully {name}.', "success")
+        return redirect(url_for('contact'))
     return render_template('contact.html', year=current_year, form=form)
 
 
@@ -126,6 +138,7 @@ def email_unconfirmed():
                                         first_name=user.first_name)
             email_confirmation_resend(user_email, text_body, html_body)
             flash(f'A new email confirmation has been sent {user.first_name}.', 'success')
+            return redirect(url_for('email_unconfirmed'))
     return render_template('auth/email_unconfirmed.html', form=form)
 
 
@@ -189,6 +202,7 @@ def reset_password_request():
                                         first_name=user.first_name)
             email_password_reset(user_email, text_body, html_body)
             flash(f'An email has been sent {user.first_name}, check it for further instructions.', 'success')
+            return redirect(url_for('reset_password_request'))
     return render_template('auth/reset_password_request.html', form=form)
 
 
@@ -244,7 +258,6 @@ def change_password():
         else:
             user.password = encrypt_new_password
             db.session.commit()
-            flash(f'Password successfully changed {user.first_name}.', 'success')
 
             user_email = user.email
             reset_password_request_url = url_for('reset_password_request', _external=True)
@@ -255,5 +268,8 @@ def change_password():
                                         reset_password_request_url=reset_password_request_url,
                                         first_name=user.first_name)
             email_password_change(user_email, text_body, html_body)
+
+            flash(f'Password successfully changed {user.first_name}.', 'success')
+            return redirect(url_for('change_password'))
 
     return render_template('auth/change_password.html', form=form)
