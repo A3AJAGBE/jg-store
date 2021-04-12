@@ -1,7 +1,8 @@
 from store import db, app
-from flask_login import UserMixin
-from flask_admin import Admin
+from flask_login import UserMixin, current_user
+from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
+from flask import url_for, redirect, request
 
 
 class Roles(db.Model):
@@ -73,15 +74,36 @@ class Products(db.Model):
         return self.name
 
 
+class MainAdminHomeView(AdminIndexView):
+
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.role_id == 3
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('login', next=request.url))
+
+
+class MainAdminView(ModelView):
+    column_exclude_list = ['password', 'email_confirmed_at']
+
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.role_id == 3
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('login', next=request.url))
+
+
 """Flask Admin setup"""
 # set bootswatch theme
 app.config['FLASK_ADMIN_SWATCH'] = 'flatly'
-admin = Admin(app, name='The Jewelry Gallery', template_mode='bootstrap3')
+admin = Admin(app, 'E-store App', url='/',
+                   index_view=MainAdminHomeView(name='The Jewelry Gallery'),
+                   template_mode='bootstrap3')
 
 # Add administrative views here
-admin.add_view(ModelView(Roles, db.session))
-admin.add_view(ModelView(Users, db.session))
-admin.add_view(ModelView(Contact, db.session))
-admin.add_view(ModelView(Categories, db.session))
-admin.add_view(ModelView(Subcategories, db.session))
-admin.add_view(ModelView(Products, db.session))
+admin.add_view(MainAdminView(Roles, db.session))
+admin.add_view(MainAdminView(Users, db.session))
+admin.add_view(MainAdminView(Contact, db.session))
+admin.add_view(MainAdminView(Categories, db.session))
+admin.add_view(MainAdminView(Subcategories, db.session))
+admin.add_view(MainAdminView(Products, db.session))
