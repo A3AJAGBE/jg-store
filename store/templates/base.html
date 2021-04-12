@@ -118,6 +118,14 @@
                 </div>
                 <div class="col-lg-6">
                     <p class="footer-text">Designed & Developed by: A3AJAGBE</p>
+
+                    {% if current_user.role_id == 3 %}
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                           <a class="btn theme-btn btn-lg text-light me-md-3" href="{{ url_for('admin.index') }}" role="button">Main Admin Access</a>
+                        </div>
+
+                    {% endif %}
                 </div>
             </div>
         </div>
