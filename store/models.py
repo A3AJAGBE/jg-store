@@ -1,8 +1,22 @@
+import os
 from store import db, app
 from flask_login import UserMixin, current_user
-from flask_admin import Admin, AdminIndexView
+from flask_admin import Admin, AdminIndexView, form
 from flask_admin.contrib.sqla import ModelView
 from flask import url_for, redirect, request
+from flask_uploads import UploadSet, IMAGES, configure_uploads
+from sqlalchemy import event
+# Do not remove the PIL import
+import PIL
+
+
+# Uploads Config
+app.config['UPLOADED_IMAGES_DEST'] = image_directory = 'store/static/products_images'
+app.config['UPLOADED_IMAGES_URL'] = 'store/static/products_images/'
+app.config['UPLOADED_FILES_ALLOW'] = ['.jpg', '.png', '.jpeg']
+
+images = UploadSet('images', IMAGES)
+configure_uploads(app, images)
 
 
 class Roles(db.Model):
@@ -73,6 +87,21 @@ class Products(db.Model):
     def __repr__(self):
         return self.name
 
+    @property
+    def image_filepath(self):
+        """To access the product image filepath"""
+        return images.path(self.image)
+
+
+@event.listens_for(Products, 'after_delete')
+def delete_image(target):
+    """This function deletes the image from the folder."""
+    if target.image_filepath is not None:
+        try:
+            os.remove(target.image_filepath)
+        except OSError:
+            pass
+
 
 class MainAdminHomeView(AdminIndexView):
 
@@ -93,6 +122,16 @@ class MainAdminView(ModelView):
         return redirect(url_for('login', next=request.url))
 
 
+class ImageView(MainAdminView):
+
+    form_extra_fields = {
+        'image': form.ImageUploadField(
+            base_path=image_directory,
+            url_relative_path='products/'
+        )
+    }
+
+
 """Flask Admin setup"""
 # set bootswatch theme
 app.config['FLASK_ADMIN_SWATCH'] = 'flatly'
@@ -106,4 +145,4 @@ admin.add_view(MainAdminView(Users, db.session))
 admin.add_view(MainAdminView(Contact, db.session))
 admin.add_view(MainAdminView(Categories, db.session))
 admin.add_view(MainAdminView(Subcategories, db.session))
-admin.add_view(MainAdminView(Products, db.session))
+admin.add_view(ImageView(Products, db.session))
