@@ -146,7 +146,7 @@ def email_unconfirmed():
 def login():
     form = LoginForm()
     if current_user.is_authenticated:
-        flash("You are unable to view that page because you are currently logged in.", "info")
+        flash("You are unable to view that page because you are currently logged in or unauthorised.", "info")
         return redirect(url_for('index'))
     if form.validate_on_submit():
         email = request.form['email']
