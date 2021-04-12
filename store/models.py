@@ -1,5 +1,7 @@
-from store import db
+from store import db, app
 from flask_login import UserMixin
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 
 class Roles(db.Model):
@@ -69,3 +71,17 @@ class Products(db.Model):
 
     def __repr__(self):
         return self.name
+
+
+"""Flask Admin setup"""
+# set bootswatch theme
+app.config['FLASK_ADMIN_SWATCH'] = 'flatly'
+admin = Admin(app, name='The Jewelry Gallery', template_mode='bootstrap3')
+
+# Add administrative views here
+admin.add_view(ModelView(Roles, db.session))
+admin.add_view(ModelView(Users, db.session))
+admin.add_view(ModelView(Contact, db.session))
+admin.add_view(ModelView(Categories, db.session))
+admin.add_view(ModelView(Subcategories, db.session))
+admin.add_view(ModelView(Products, db.session))
