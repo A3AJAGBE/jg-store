@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Start Shopping{% endblock %}
+
+
+<!--Contents-->
+{% block content %}
+
+  <div class="container products mb-5">
+
+      <h2 class="pb-3">Latest Products</h2>
+
+      {% include "_messages.html" %}
+
+      {% include "_products_div.html" %}
+  </div>
+
+{% endblock %}
