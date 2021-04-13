@@ -51,6 +51,15 @@ class Contact(db.Model):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), nullable=False)
     message = db.Column(db.Text, nullable=False)
+    reply = db.Column(db.String(20))
+    reply_status = db.Column(db.String(20), default='Not Sent')
+
+    def __repr__(self):
+        return self.name
+
+    # @property
+    # def reply_email(self):
+    #     return f'<a href="mailto:{self.email}?subject=[The Jewelry Gallery] Message Reply">Reply Email</a>'
 
 
 class Categories(db.Model):
@@ -132,6 +141,15 @@ class ImageView(MainAdminView):
     }
 
 
+class ContactView(MainAdminView):
+    form_choices = {
+        'reply_status': [
+            ('Sent', 'Sent'),
+            ('Not Sent', 'Not Sent')
+        ]
+    }
+
+
 """Flask Admin setup"""
 # set bootswatch theme
 app.config['FLASK_ADMIN_SWATCH'] = 'flatly'
@@ -140,9 +158,9 @@ admin = Admin(app, 'E-store App', url='/',
                    template_mode='bootstrap3')
 
 # Add administrative views here
-admin.add_view(MainAdminView(Roles, db.session))
-admin.add_view(MainAdminView(Users, db.session))
-admin.add_view(MainAdminView(Contact, db.session))
-admin.add_view(MainAdminView(Categories, db.session))
-admin.add_view(MainAdminView(Subcategories, db.session))
-admin.add_view(ImageView(Products, db.session))
+admin.add_view(MainAdminView(Roles, db.session, endpoint='admin/roles'))
+admin.add_view(MainAdminView(Users, db.session, endpoint='admin/users'))
+admin.add_view(ContactView(Contact, db.session, endpoint='admin/contact'))
+admin.add_view(MainAdminView(Categories, db.session, endpoint='admin/categories'))
+admin.add_view(MainAdminView(Subcategories, db.session, endpoint='admin/subcategories'))
+admin.add_view(ImageView(Products, db.session, endpoint='admin/products'))
