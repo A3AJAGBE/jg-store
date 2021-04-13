@@ -13,7 +13,7 @@
                         <div class="header-content text-center theme-text-light">
                             <h1 class="display-1">The <br> <span class="theme-text">Jewelry Gallery</span></h1>
                             <p class="lead">...Exquisite elegance @ an affordable price</p>
-                            <a class="btn theme-btn btn-lg" href="#" role="button">Get Started</a>
+                            <a class="btn theme-btn btn-lg" href="{{ url_for('product') }}" role="button">Get Started</a>
                         </div>
                     </div>
                 </div>
@@ -32,6 +32,8 @@
       {% include "_messages.html" %}
 
     <h2 class="pb-3">Latest Products</h2>
+
+      {% include "_products_div.html" %}
 
   </div>
 

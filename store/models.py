@@ -101,6 +101,10 @@ class Products(db.Model):
         """To access the product image filepath"""
         return images.path(self.image)
 
+    def get_percent_saved(self):
+        amount_saved = self.price - self.discount
+        return round(amount_saved / self.price * 100)
+
 
 @event.listens_for(Products, 'after_delete')
 def delete_image(target):
