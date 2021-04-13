@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from store import app, db, login_manager
 from store.forms import *
-from store.models import Users, Contact
+from store.models import Users, Contact, Products
 from store.emails import *
 
 # Get the year
@@ -19,7 +19,8 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    return render_template('index.html', year=current_year)
+    all_products = Products.query.all()
+    return render_template('index.html', year=current_year, products=all_products)
 
 
 @app.route('/about')
@@ -27,7 +28,11 @@ def about():
     return render_template('about.html', year=current_year)
 
 
-
+@app.route('/store_products')
+@login_required
+def product():
+    all_products = Products.query.all()
+    return render_template('products.html', year=current_year, products=all_products)
 
 
 @app.route('/contact_us', methods=['GET', 'POST'])
