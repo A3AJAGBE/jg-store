@@ -155,6 +155,18 @@ header .header-content {
   margin: 100% auto;
 }
 
+/* Pagination styling */
+.page-item.active .page-link, .page-link:hover {
+    background: #C0A062;
+    border: #C0A062;
+    color: #FBF9F6;
+    font-family: 'Abril Fatface', cursive;
+}
+
+.page-link {
+    color: #C0A062;
+}
+
 
 /* Tablet and desktop styling */
 @media only screen and (min-width: 992px) {
