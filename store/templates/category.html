@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %} Category {% endblock %}
+{% block title %} {{ sub_category }} Products {% endblock %}
 
 
 <!--Contents-->
@@ -7,12 +7,46 @@
 
   <div class="container products mb-5">
 
-      <h2 class="pb-3">Category</h2>
+      <h2 class="pb-3">{{ category }} Products</h2>
 
       {% include "_messages.html" %}
 
       {% include "_products_div.html" %}
 
   </div>
+
+    <div class="container mb-5">
+        <!-- Pagination -->
+        <div aria-label="Page navigation example ">
+          <ul class="pagination pagination-lg justify-content-center">
+              {% if products.has_prev %}
+                <li class="page-item"><a class="page-link" href="{{ url_for('get_category', cat_id=category.id, page=products.prev_num) }}">Previous</a></li>
+
+              {% endif %}
+
+              {% for page_num in products.iter_pages() %}
+
+                {% if page_num %}
+
+                    {% if products.page == page_num %}
+                     <li class="page-item active" aria-current="page"> <span class="page-link">{{ page_num }}</span></li>
+                    {% else %}
+
+                    <li class="page-item"><a class="page-link" href="{{ url_for('get_category', cat_id=category.id, page=page_num) }}">{{ page_num }}</a></li>
+                    {% endif %}
+                {% else %}
+                ...
+
+                {% endif %}
+               {% endfor %}
+
+              {% if products.has_next %}
+                <li class="page-item"><a class="page-link" href="{{ url_for('get_category', cat_id=category.id, page=products.next_num) }}">Next</a></li>
+
+              {% endif %}
+          </ul>
+        </div>
+    </div>
+
 
 {% endblock %}
