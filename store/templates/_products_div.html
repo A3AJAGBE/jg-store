@@ -29,9 +29,8 @@
                 </div>
                 <div class="card-footer">
                     <p class="text-start pt-3">Tags:
-                        <a href="#"><span class="badge rounded-pill bg-secondary">{{ product.category }}</span></a>
-                        <a href="#"><span class="badge rounded-pill bg-secondary">{{ product.subcategory }}</span></a>
-
+                        <a href="{{ url_for('get_category', cat_id=product.category_id) }}"><span class="badge rounded-pill bg-secondary">{{ product.category }}</span></a>
+                        <a href="{{ url_for('get_subcategory', sub_cat_id=product.sub_category_id) }}"><span class="badge rounded-pill bg-secondary">{{ product.subcategory }}</span></a>
                     </p>
                     <div class="d-grid">
                         <a class="btn theme-btn btn-lg" href="#" role="button">Add to Cart</a>
