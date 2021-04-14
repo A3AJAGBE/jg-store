@@ -19,7 +19,7 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    all_products = Products.query.all()
+    all_products = Products.query.order_by(Products.id.desc()).limit(6)
     # To the limit the categories shown to those attached to a product
     categories = Categories.query.join(Products, (Categories.id == Products.category_id)).all()
     # To the limit the sub-categories shown to those attached to a product
@@ -30,24 +30,31 @@ def index():
 
 @app.route('/category/<int:cat_id>')
 def get_category(cat_id):
-    all_products = Products.query.filter_by(category_id=cat_id)
+    page = request.args.get('page', 1, type=int)
+    category = Categories.query.filter_by(id=cat_id).first_or_404()
+    all_products = Products.query.filter_by(category_id=category.id).order_by(Products.id.desc()).paginate(page=page,
+                                                                                                           per_page=2)
     # To the limit the categories shown to those attached to a product
     categories = Categories.query.join(Products, (Categories.id == Products.category_id)).all()
     # To the limit the sub-categories shown to those attached to a product
     sub_categories = Subcategories.query.join(Products, (Subcategories.id == Products.sub_category_id)).all()
     return render_template('category.html', year=current_year, products=all_products, categories=categories,
-                           sub_categories=sub_categories)
+                           sub_categories=sub_categories, category=category)
 
 
 @app.route('/sub-category/<int:sub_cat_id>')
 def get_subcategory(sub_cat_id):
-    all_products = Products.query.filter_by(sub_category_id=sub_cat_id)
+    page = request.args.get('page', 1, type=int)
+    sub_category = Subcategories.query.filter_by(id=sub_cat_id).first_or_404()
+    all_products = Products.query.filter_by(sub_category_id=sub_category.id).order_by(Products.id.desc()).paginate(
+        page=page,
+        per_page=2)
     # To the limit the categories shown to those attached to a product
     categories = Categories.query.join(Products, (Categories.id == Products.category_id)).all()
     # To the limit the sub-categories shown to those attached to a product
     sub_categories = Subcategories.query.join(Products, (Subcategories.id == Products.sub_category_id)).all()
     return render_template('subcategory.html', year=current_year, products=all_products, categories=categories,
-                           sub_categories=sub_categories)
+                           sub_categories=sub_categories, sub_category=sub_category)
 
 
 @app.route('/about')
@@ -62,7 +69,8 @@ def about():
 
 @app.route('/store_products')
 def product():
-    all_products = Products.query.all()
+    page = request.args.get('page', 1, type=int)
+    all_products = Products.query.paginate(page=page, per_page=1)
     # To the limit the categories shown to those attached to a product
     categories = Categories.query.join(Products, (Categories.id == Products.category_id)).all()
     # To the limit the sub-categories shown to those attached to a product
