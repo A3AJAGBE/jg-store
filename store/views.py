@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from store import app, db, login_manager
 from store.forms import *
-from store.models import Users, Contact, Products
+from store.models import Users, Contact, Products, Categories, Subcategories
 from store.emails import *
 
 # Get the year
@@ -20,23 +20,63 @@ def load_user(user_id):
 @app.route('/')
 def index():
     all_products = Products.query.all()
-    return render_template('index.html', year=current_year, products=all_products)
+    # To the limit the categories shown to those attached to a product
+    categories = Categories.query.join(Products, (Categories.id == Products.category_id)).all()
+    # To the limit the sub-categories shown to those attached to a product
+    sub_categories = Subcategories.query.join(Products, (Subcategories.id == Products.sub_category_id)).all()
+    return render_template('index.html', year=current_year, products=all_products, categories=categories,
+                           sub_categories=sub_categories)
+
+
+@app.route('/category/<int:cat_id>')
+def get_category(cat_id):
+    all_products = Products.query.filter_by(category_id=cat_id)
+    # To the limit the categories shown to those attached to a product
+    categories = Categories.query.join(Products, (Categories.id == Products.category_id)).all()
+    # To the limit the sub-categories shown to those attached to a product
+    sub_categories = Subcategories.query.join(Products, (Subcategories.id == Products.sub_category_id)).all()
+    return render_template('category.html', year=current_year, products=all_products, categories=categories,
+                           sub_categories=sub_categories)
+
+
+@app.route('/sub-category/<int:sub_cat_id>')
+def get_subcategory(sub_cat_id):
+    all_products = Products.query.filter_by(sub_category_id=sub_cat_id)
+    # To the limit the categories shown to those attached to a product
+    categories = Categories.query.join(Products, (Categories.id == Products.category_id)).all()
+    # To the limit the sub-categories shown to those attached to a product
+    sub_categories = Subcategories.query.join(Products, (Subcategories.id == Products.sub_category_id)).all()
+    return render_template('subcategory.html', year=current_year, products=all_products, categories=categories,
+                           sub_categories=sub_categories)
 
 
 @app.route('/about')
 def about():
-    return render_template('about.html', year=current_year)
+    # To the limit the categories shown to those attached to a product
+    categories = Categories.query.join(Products, (Categories.id == Products.category_id)).all()
+    # To the limit the sub-categories shown to those attached to a product
+    sub_categories = Subcategories.query.join(Products, (Subcategories.id == Products.sub_category_id)).all()
+    return render_template('about.html', year=current_year, categories=categories,
+                           sub_categories=sub_categories)
 
 
 @app.route('/store_products')
-@login_required
 def product():
     all_products = Products.query.all()
-    return render_template('products.html', year=current_year, products=all_products)
+    # To the limit the categories shown to those attached to a product
+    categories = Categories.query.join(Products, (Categories.id == Products.category_id)).all()
+    # To the limit the sub-categories shown to those attached to a product
+    sub_categories = Subcategories.query.join(Products, (Subcategories.id == Products.sub_category_id)).all()
+    return render_template('products.html', year=current_year, products=all_products, categories=categories,
+                           sub_categories=sub_categories)
 
 
 @app.route('/contact_us', methods=['GET', 'POST'])
 def contact():
+    # To the limit the categories shown to those attached to a product
+    categories = Categories.query.join(Products, (Categories.id == Products.category_id)).all()
+    # To the limit the sub-categories shown to those attached to a product
+    sub_categories = Subcategories.query.join(Products, (Subcategories.id == Products.sub_category_id)).all()
     form = ContactForm()
     if form.validate_on_submit():
         name = request.form['name'].title()
@@ -52,7 +92,8 @@ def contact():
         db.session.commit()
         flash(f'Message sent successfully {name}.', "success")
         return redirect(url_for('contact'))
-    return render_template('contact.html', year=current_year, form=form)
+    return render_template('contact.html', year=current_year, form=form, categories=categories,
+                           sub_categories=sub_categories)
 
 
 @app.route('/register', methods=['GET', 'POST'])
