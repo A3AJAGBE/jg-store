@@ -24,7 +24,7 @@
 
               {% endif %}
 
-              {% for page_num in products.iter_pages() %}
+              {% for page_num in products.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
 
                 {% if page_num %}
 
@@ -35,8 +35,7 @@
                     <li class="page-item"><a class="page-link" href="{{ url_for('get_subcategory', sub_cat_id=sub_category.id, page=page_num) }}">{{ page_num }}</a></li>
                     {% endif %}
                 {% else %}
-                ...
-
+                <li class="page-item" aria-current="page"> <span class="page-link">...</span></li>
                 {% endif %}
                {% endfor %}
 
