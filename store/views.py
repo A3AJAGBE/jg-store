@@ -70,7 +70,7 @@ def about():
 @app.route('/store_products')
 def product():
     page = request.args.get('page', 1, type=int)
-    all_products = Products.query.paginate(page=page, per_page=1)
+    all_products = Products.query.paginate(page=page, per_page=6)
     # To the limit the categories shown to those attached to a product
     categories = Categories.query.join(Products, (Categories.id == Products.category_id)).all()
     # To the limit the sub-categories shown to those attached to a product
