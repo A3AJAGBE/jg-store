@@ -6,6 +6,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask import url_for, redirect, request
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 from sqlalchemy import event
+import humanize
 # Do not remove the PIL import
 import PIL
 
@@ -104,6 +105,12 @@ class Products(db.Model):
     def get_percent_saved(self):
         amount_saved = self.price - self.discount
         return round(amount_saved / self.price * 100)
+
+    def get_humanize_price(self):
+        return humanize.intcomma(self.price)
+
+    def get_humanize_discount(self):
+        return humanize.intcomma(self.discount)
 
 
 @event.listens_for(Products, 'after_delete')

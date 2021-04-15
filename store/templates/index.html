@@ -42,9 +42,9 @@
                     <div class="card-img-overlay price-overlay">
                         {% if product.discount %}
                         <p class="card-text fs-3">
-                            <s class="text-danger">₦{{ product.price }}</s> ₦{{ product.discount }}</p>
+                            <s class="text-danger">₦{{ product.get_humanize_price() }}</s> ₦{{ product.get_humanize_discount() }}</p>
                         {% else %}
-                        <p class="card-text fs-3">₦{{ product.price }}</p>
+                        <p class="card-text fs-3">₦{{ product.get_humanize_price() }}</p>
                         {% endif %}
                     </div>
                     <div class="card-body text-center">
