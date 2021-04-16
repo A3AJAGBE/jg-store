@@ -130,15 +130,12 @@
                     </p>
                 </div>
                 <div class="col-lg-6">
-                    <p class="footer-text">Designed & Developed by: A3AJAGBE</p>
+                    <p class="float-lg-end">Designed & Developed by: A3AJAGBE
+                        {% if current_user.role_id == 3 %}
+                             <a class="btn theme-btn btn-lg text-light" href="{{ url_for('admin.index') }}" role="button">Admin</a>
+                        {% endif %}
+                    </p>
 
-                    {% if current_user.role_id == 3 %}
-
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                           <a class="btn theme-btn btn-lg text-light me-md-3" href="{{ url_for('admin.index') }}" role="button">Main Admin Access</a>
-                        </div>
-
-                    {% endif %}
                 </div>
             </div>
         </div>
@@ -151,6 +148,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    {% endblock %}
+
+    {% block extra_scripts %}
     {% endblock %}
 </body>
 </html>
