@@ -170,14 +170,6 @@ header .header-content {
 
 /* Tablet and desktop styling */
 @media only screen and (min-width: 992px) {
-    #navbar {
-        background: transparent;
-    }
-
-    .footer-text{
-        float: right;
-    }
-
     .centered-content {
       margin: 0;
     }
