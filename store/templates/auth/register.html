@@ -10,19 +10,19 @@
 {% block content %}
 
 <div class="centered-content">
-     <div class="container">
-         <a href="{{ url_for('index') }}">
-               <img class="d-block mx-auto mb-4" src="{{url_for('static', filename='images/jg.png')}}" alt="" width="100" height="70">
-         </a>
-  <h1 class="display-5 text-center">Get the full shopping experience.</h1>
-  <div class="col-lg-6 mx-auto">
-      {% include "_messages.html" %}
+    <div class="container">
+        <a href="{{ url_for('index') }}">
+            <img class="d-block mx-auto mb-4" src="{{url_for('static', filename='images/jg.png')}}" alt="" width="100" height="70">
+        </a>
+        <h1 class="display-5 text-center">Get the full shopping experience.</h1>
+        <div class="col-lg-6 mx-auto">
+            {% include "_messages.html" %}
 
-      {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "lg theme-btn"}, extra_classes="p-5 border rounded-3 bg-light") }}
-      <p class="pt-3">Have an account? <a href="{{ url_for('login') }}" class="form_link">Login</a></p>
-  </div>
-</div>
+            {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "lg theme-btn"}, extra_classes="p-5 border rounded-3 bg-light") }}
+            <p class="pt-3">Have an account? <a href="{{ url_for('login') }}" class="form_link">Login</a></p>
+        </div>
     </div>
+</div>
 
 {% endblock %}
 

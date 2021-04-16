@@ -1,35 +1,39 @@
 {% extends 'base.html' %}
 {% block title %}Profile{% endblock %}
 
+{% block extra_css %}
+{% include "_headstyle.html" %}
+{% endblock %}
+
 <!-- Header -->
 {% block header %}
 
-  <header style="background-image: url('{{ url_for('static', filename='images/profile.png')}}');">
+<header style="background-image: url('{{ url_for('static', filename='images/profile.png')}}');">
 
-        <div class="image-overlay">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-md-10 mx-auto">
-                        <div class="header-content text-center theme-text-light">
-                            <h1 class="display-1">{{ profile.first_name }} {{ profile.last_name }}</h1>
-                            <p class="lead">Your profile page</p>
-                        </div>
+    <div class="image-overlay">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <div class="header-content text-center theme-text-light">
+                        <h1 class="display-1">{{ profile.first_name }} {{ profile.last_name }}</h1>
+                        <p class="lead">Your profile page</p>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-  </header>
+</header>
 
 {% endblock %}
 
 <!--Contents-->
 {% block content %}
 
-    <div class="container my-5 ">
-        <div class="col-lg-6 mx-auto">
-            <h3>Email: {{ profile.email }}</h3>
-        </div>
+<div class="container my-5 ">
+    <div class="col-lg-6 mx-auto">
+        <h3>Email: {{ profile.email }}</h3>
     </div>
+</div>
 
 {% endblock %}

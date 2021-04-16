@@ -5,48 +5,42 @@
 <!--Contents-->
 {% block content %}
 
-  <div class="container products mb-5">
+<div class="container products mb-5">
 
-      <h2 class="pb-3">All Products</h2>
+    <h2 class="pb-3">All Products</h2>
 
-      {% include "_messages.html" %}
+    {% include "_messages.html" %}
 
-      {% include "_products_div.html" %}
+    {% include "_products_div.html" %}
 
-  </div>
+</div>
 
-    <div class="container mb-5">
-        <!-- Pagination -->
-        <div aria-label="Page navigation example ">
-          <ul class="pagination pagination-lg justify-content-center">
-              {% if products.has_prev %}
-                <li class="page-item"><a class="page-link" href="{{ url_for('product', page=products.prev_num) }}">Previous</a></li>
+<div class="container mb-5">
+    <!-- Pagination -->
+    <div aria-label="Page navigation example ">
+        <ul class="pagination pagination-lg justify-content-center">
+            {% if products.has_prev %}
+            <li class="page-item"><a class="page-link" href="{{ url_for('product', page=products.prev_num) }}">Previous</a></li>
+            {% endif %}
 
-              {% endif %}
+            {% for page_num in products.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
+            {% if page_num %}
+            {% if products.page == page_num %}
+            <li class="page-item active" aria-current="page"> <span class="page-link">{{ page_num }}</span></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="{{ url_for('product', page=page_num) }}">{{ page_num }}</a></li>
+            {% endif %}
+            {% else %}
+            <li class="page-item" aria-current="page"> <span class="page-link">...</span></li>
+            {% endif %}
+            {% endfor %}
 
-              {% for page_num in products.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
-
-                {% if page_num %}
-
-                    {% if products.page == page_num %}
-                     <li class="page-item active" aria-current="page"> <span class="page-link">{{ page_num }}</span></li>
-                    {% else %}
-
-                    <li class="page-item"><a class="page-link" href="{{ url_for('product', page=page_num) }}">{{ page_num }}</a></li>
-                    {% endif %}
-                {% else %}
-
-                <li class="page-item" aria-current="page"> <span class="page-link">...</span></li>
-                {% endif %}
-               {% endfor %}
-
-              {% if products.has_next %}
-                <li class="page-item"><a class="page-link" href="{{ url_for('product', page=products.next_num) }}">Next</a></li>
-
-              {% endif %}
-          </ul>
-        </div>
+            {% if products.has_next %}
+            <li class="page-item"><a class="page-link" href="{{ url_for('product', page=products.next_num) }}">Next</a></li>
+            {% endif %}
+        </ul>
     </div>
+</div>
 
 
 {% endblock %}

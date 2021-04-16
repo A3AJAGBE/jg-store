@@ -1,42 +1,40 @@
- <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
 
     {% for product in products.items %}
-      <div class="col">
-            <div class="card h-100 shadow">
-
-                <img src="static/products_images/{{product.image}}" class="card-img-top" alt="{{ product.name }} Image" height="400px">
-                <div class="card-img-overlay price-overlay">
-                    {% if product.discount %}
-                    <p class="card-text fs-3">
-                        <s class="text-danger">₦{{ product.get_humanize_price() }}</s> ₦{{ product.get_humanize_discount() }}</p>
-                    {% else %}
-                    <p class="card-text fs-3">₦{{ product.get_humanize_price() }}</p>
-                    {% endif %}
+    <div class="col">
+        <div class="card h-100 shadow">
+            <img src="static/products_images/{{product.image}}" class="card-img-top" alt="{{ product.name }} Image" height="400px">
+            <div class="card-img-overlay price-overlay">
+                {% if product.discount %}
+                <p class="card-text fs-3">
+                    <s class="text-danger">₦{{ product.get_humanize_price() }}</s> ₦{{ product.get_humanize_discount() }}</p>
+                {% else %}
+                <p class="card-text fs-3">₦{{ product.get_humanize_price() }}</p>
+                {% endif %}
+            </div>
+            <div class="card-body text-center">
+                <h3 class="card-title">{{ product.name }}</h3>
+                {% if product.stock > 0 %}
+                <h5>In Stock: {{ product.stock }} </h5>
+                {% else %}
+                <div class="card-img-overlay stock-overlay">
+                    <h2 class="text-danger">Out of Stock</h2>
                 </div>
-                <div class="card-body text-center">
-                    <h3 class="card-title">{{ product.name }}</h3>
-                    {% if product.stock > 0 %}
-                     <h5>In Stock: {{ product.stock }} </h5>
-                    {% else %}
-                        <div class="card-img-overlay stock-overlay">
-                            <h2 class="text-danger">Out of Stock</h2>
-                         </div>
-                    {% endif %}
-                    {% if product.discount %}
-                        <span class="badge bg-info text-dark fs-5">Save {{ product.get_percent_saved() }}%</span>
-                    {% endif %}
-
-                </div>
-                <div class="card-footer">
-                    <p class="text-start pt-3">Tags:
-                        <a href="{{ url_for('get_category', cat_id=product.category_id) }}"><span class="badge rounded-pill bg-secondary">{{ product.category }}</span></a>
-                        <a href="{{ url_for('get_subcategory', sub_cat_id=product.sub_category_id) }}"><span class="badge rounded-pill bg-secondary">{{ product.subcategory }}</span></a>
-                    </p>
-                    <div class="d-grid">
-                        <a class="btn theme-btn btn-lg" href="#" role="button">Add to Cart</a>
-                    </div>
+                {% endif %}
+                {% if product.discount %}
+                <span class="badge bg-info text-dark fs-5">Save {{ product.get_percent_saved() }}%</span>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <p class="text-start pt-3">Tags:
+                    <a href="{{ url_for('get_category', cat_id=product.category_id) }}"><span class="badge rounded-pill bg-secondary">{{ product.category }}</span></a>
+                    <a href="{{ url_for('get_subcategory', sub_cat_id=product.sub_category_id) }}"><span class="badge rounded-pill bg-secondary">{{ product.subcategory }}</span></a>
+                </p>
+                <div class="d-grid">
+                    <a class="btn theme-btn btn-lg" href="#" role="button">Add to Cart</a>
                 </div>
             </div>
         </div>
-     {% endfor %}
+    </div>
+    {% endfor %}
 </div>
