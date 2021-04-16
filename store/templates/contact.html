@@ -2,6 +2,16 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 {% block title %}Contact{% endblock %}
 
+{% block extra_css %}
+<style>
+@media only screen and (min-width: 992px) {
+    #navbar {
+        background: transparent;
+    }
+}
+</style>
+{% endblock %}
+
 <!-- Header -->
 {% block header %}
 
@@ -70,19 +80,5 @@
     </div>
 
     </div>
-
-{% endblock %}
-
-{% block extra_scripts %}
-
-    <script>
-
-    if (window.matchMedia('(min-width: 992px)').matches)
-    {
-        $("#navbar").css({
-            background: "transparent"
-          });
-    }
-    </script>
 
 {% endblock %}
