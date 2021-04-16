@@ -54,3 +54,17 @@
     </div>
 
 {% endblock %}
+
+{% block extra_scripts %}
+
+    <script>
+
+    if (window.matchMedia('(min-width: 992px)').matches)
+    {
+        $("#navbar").css({
+            background: "transparent"
+          });
+    }
+    </script>
+
+{% endblock %}
