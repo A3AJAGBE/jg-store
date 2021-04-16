@@ -3,7 +3,7 @@
     {% for product in products.items %}
     <div class="col">
         <div class="card h-100 shadow">
-            <img src="static/products_images/{{product.image}}" class="card-img-top" alt="{{ product.name }} Image" height="400px">
+            <img src="../static/products_images/{{product.image}}" class="card-img-top" alt="{{ product.name }} Image" height="400px">
             <div class="card-img-overlay price-overlay">
                 {% if product.discount %}
                 <p class="card-text fs-3">

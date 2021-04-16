@@ -135,11 +135,11 @@ header .header-content {
 }
 
 /* Content styling */
-.home-products .card img, .products .card img{
+.card img, .products .card img{
     padding: 60px 30px 30px;
 }
 
-.home-products .price-overlay {
+.price-overlay {
     bottom: auto;
 }
 
@@ -152,7 +152,7 @@ header .header-content {
 }
 
 .stock-overlay h2 {
-  margin: 100% auto;
+  margin: 95% auto;
 }
 
 /* Pagination styling */
