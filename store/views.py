@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, session
 from flask_login import current_user, login_user, logout_user, login_required
 from itsdangerous import SignatureExpired
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -330,3 +330,48 @@ def change_password():
             return redirect(url_for('change_password'))
 
     return render_template('auth/change_password.html', form=form)
+
+
+def dict_merge(dict1, dict2):
+    if isinstance(dict1, list) and isinstance(dict2, list):
+        return dict1 + dict2
+    elif isinstance(dict1, dict) and isinstance(dict2, dict):
+        return dict(list(dict1.items()) + list(dict2.items()))
+    return False
+
+
+@app.route('/add-to-cart', methods=['POST', 'GET'])
+@login_required
+def add_to_cart():
+    try:
+        if request.method == "POST":
+            product_id = request.form['product_id']
+            quantity = request.form['quantity']
+            productCart = Products.query.filter_by(id=product_id).first()
+
+            if product_id and quantity:
+                CartDict = {
+                    product_id: {
+                        'name': productCart.name,
+                        'price': productCart.price,
+                        'discount': productCart.discount,
+                        'quantity': quantity,
+                        'image': productCart.image
+                    }
+                }
+
+                if 'ShoppingCart' in session:
+                    print(session['ShoppingCart'])
+                    if product_id in session['ShoppingCart']:
+                        flash(f'"{productCart.name}" already in the cart.', 'danger')
+                    else:
+                        session['ShoppingCart'] = dict_merge(session['ShoppingCart'], CartDict)
+                        return redirect(request.referrer)
+                else:
+                    session['ShoppingCart'] = CartDict
+                    return redirect(request.referrer)
+
+    except Exception as e:
+        print(e)
+    finally:
+        return redirect(request.referrer)
