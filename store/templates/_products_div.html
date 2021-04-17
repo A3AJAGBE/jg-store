@@ -30,9 +30,16 @@
                     <a href="{{ url_for('get_category', cat_id=product.category_id) }}"><span class="badge rounded-pill bg-secondary">{{ product.category }}</span></a>
                     <a href="{{ url_for('get_subcategory', sub_cat_id=product.sub_category_id) }}"><span class="badge rounded-pill bg-secondary">{{ product.subcategory }}</span></a>
                 </p>
-                <div class="d-grid">
-                    <a class="btn theme-btn btn-lg" href="#" role="button">Add to Cart</a>
-                </div>
+                <form method="POST" action="{{ url_for('add_to_cart') }}">
+                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                    <div class="input-group mb-3">
+                      <span class="input-group-text" id="basic-addon3">Quantity: </span>
+                      <input type="number" class="form-control" id="quantity" aria-describedby="basic-addon3" value="1" min="1" max="{{ product.stock }}" name="quantity">
+                    </div>
+                  <div class="d-grid">
+                      <input class="btn btn-lg theme-btn" id="submit" name="submit" type="submit" value="Add to Cart">
+                  </div>
+                </form>
             </div>
         </div>
     </div>
