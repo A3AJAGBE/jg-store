@@ -1,4 +1,6 @@
 import os
+from datetime import datetime
+
 from store import db, app
 from flask_login import UserMixin, current_user
 from flask_admin import Admin, AdminIndexView, form
@@ -9,7 +11,6 @@ from sqlalchemy import event
 import humanize
 # Do not remove the PIL import
 import PIL
-
 
 # Uploads Config
 app.config['UPLOADED_IMAGES_DEST'] = image_directory = 'store/static/products_images'
@@ -41,6 +42,7 @@ class Users(UserMixin, db.Model):
     is_active = db.Column(db.Boolean(), nullable=False, default=1)
     password = db.Column(db.String(300), nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False, default=1)
+    cart = db.relationship('Cart', backref='user', lazy=True)
 
     def __repr__(self):
         return f'{self.first_name} {self.last_name}'
@@ -93,6 +95,7 @@ class Products(db.Model):
     image = db.Column(db.String(128), unique=True, nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
     sub_category_id = db.Column(db.Integer, db.ForeignKey('subcategories.id'), nullable=False)
+    cart = db.relationship('Cart', backref='products', lazy=True)
 
     def __repr__(self):
         return self.name
@@ -123,6 +126,20 @@ def delete_image(target):
             pass
 
 
+class Cart(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False, default=1)
+    complete = db.Column(db.Boolean, default=False)
+    start_date = db.Column(db.DateTime, nullable=False,
+                           default=datetime.utcnow)
+    ordered_date = db.Column(db.DateTime, nullable=True)
+
+    def __repr__(self):
+        return f'Product: {self.product_id}'
+
+
 class MainAdminHomeView(AdminIndexView):
 
     def is_accessible(self):
@@ -143,7 +160,6 @@ class MainAdminView(ModelView):
 
 
 class ImageView(MainAdminView):
-
     form_extra_fields = {
         'image': form.ImageUploadField(
             base_path=image_directory,
@@ -165,8 +181,8 @@ class ContactView(MainAdminView):
 # set bootswatch theme
 app.config['FLASK_ADMIN_SWATCH'] = 'flatly'
 admin = Admin(app, 'E-store App', url='/',
-                   index_view=MainAdminHomeView(name='The Jewelry Gallery'),
-                   template_mode='bootstrap3')
+              index_view=MainAdminHomeView(name='The Jewelry Gallery'),
+              template_mode='bootstrap3')
 
 # Add administrative views here
 admin.add_view(MainAdminView(Roles, db.session, endpoint='admin/roles'))
@@ -175,3 +191,4 @@ admin.add_view(ContactView(Contact, db.session, endpoint='admin/contact'))
 admin.add_view(MainAdminView(Categories, db.session, endpoint='admin/categories'))
 admin.add_view(MainAdminView(Subcategories, db.session, endpoint='admin/subcategories'))
 admin.add_view(ImageView(Products, db.session, endpoint='admin/products'))
+admin.add_view(MainAdminView(Cart, db.session, endpoint='admin/cart'))
