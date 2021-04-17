@@ -43,6 +43,7 @@ class Users(UserMixin, db.Model):
     password = db.Column(db.String(300), nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False, default=1)
     cart = db.relationship('Cart', backref='user', lazy=True)
+    orders = db.relationship('Orders', backref='user', lazy=True)
 
     def __repr__(self):
         return f'{self.first_name} {self.last_name}'
@@ -95,7 +96,7 @@ class Products(db.Model):
     image = db.Column(db.String(128), unique=True, nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
     sub_category_id = db.Column(db.Integer, db.ForeignKey('subcategories.id'), nullable=False)
-    cart = db.relationship('Cart', backref='products', lazy=True)
+    cart = db.relationship('Cart', backref='product', lazy=True)
 
     def __repr__(self):
         return self.name
@@ -126,6 +127,12 @@ def delete_image(target):
             pass
 
 
+cart_orders = db.Table('cart_orders',
+                       db.Column('cart_id', db.Integer, db.ForeignKey('cart.id'), primary_key=True),
+                       db.Column('orders_id', db.Integer, db.ForeignKey('orders.id'), primary_key=True)
+                       )
+
+
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
@@ -135,6 +142,18 @@ class Cart(db.Model):
     start_date = db.Column(db.DateTime, nullable=False,
                            default=datetime.utcnow)
     ordered_date = db.Column(db.DateTime, nullable=True)
+
+    def __repr__(self):
+        return f'Product: {self.product_id}'
+
+
+class Orders(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    order_code = db.Column(db.Integer, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    complete = db.Column(db.Boolean, default=False)
+    ordered_date = db.Column(db.DateTime, nullable=True)
+    products = db.relationship('Cart', secondary=cart_orders, lazy='subquery', backref=db.backref('cart', lazy=True))
 
     def __repr__(self):
         return f'Product: {self.product_id}'
@@ -192,3 +211,4 @@ admin.add_view(MainAdminView(Categories, db.session, endpoint='admin/categories'
 admin.add_view(MainAdminView(Subcategories, db.session, endpoint='admin/subcategories'))
 admin.add_view(ImageView(Products, db.session, endpoint='admin/products'))
 admin.add_view(MainAdminView(Cart, db.session, endpoint='admin/cart'))
+admin.add_view(MainAdminView(Orders, db.session, endpoint='admin/orders'))
