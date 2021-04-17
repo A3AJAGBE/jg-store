@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from store import app, db, login_manager
 from store.forms import *
-from store.models import Users, Contact, Products, Categories, Subcategories
+from store.models import Users, Contact, Products, Categories, Subcategories, Cart
 from store.emails import *
 
 # Get the year
@@ -343,35 +343,19 @@ def dict_merge(dict1, dict2):
 @app.route('/add-to-cart', methods=['POST', 'GET'])
 @login_required
 def add_to_cart():
-    try:
-        if request.method == "POST":
-            product_id = request.form['product_id']
-            quantity = request.form['quantity']
-            productCart = Products.query.filter_by(id=product_id).first()
+    if request.method == "POST":
+        user_id = current_user.id
+        product_id = request.form['product_id']
+        quantity = request.form['quantity']
 
-            if product_id and quantity:
-                CartDict = {
-                    product_id: {
-                        'name': productCart.name,
-                        'price': productCart.price,
-                        'discount': productCart.discount,
-                        'quantity': quantity,
-                        'image': productCart.image
-                    }
-                }
-
-                if 'ShoppingCart' in session:
-                    print(session['ShoppingCart'])
-                    if product_id in session['ShoppingCart']:
-                        flash(f'"{productCart.name}" already in the cart.', 'danger')
-                    else:
-                        session['ShoppingCart'] = dict_merge(session['ShoppingCart'], CartDict)
-                        return redirect(request.referrer)
-                else:
-                    session['ShoppingCart'] = CartDict
-                    return redirect(request.referrer)
-
-    except Exception as e:
-        print(e)
-    finally:
+        add_product = Cart(
+            user_id=user_id,
+            product_id=product_id,
+            quantity=quantity
+        )
+        db.session.add(add_product)
+        db.session.commit()
+        flash("Added to cart", "success")
         return redirect(request.referrer)
+    return redirect(request.referrer)
+
